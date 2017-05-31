@@ -2,6 +2,8 @@ package de.zebrajaeger.buildsign;
 
 import de.zebrajaeger.buildsign.data.DisplayInfo;
 import de.zebrajaeger.buildsign.data.DisplayInfoReceive;
+import de.zebrajaeger.buildsign.data.DisplaySend;
+import de.zebrajaeger.buildsign.data.DisplayValues;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,11 +44,22 @@ public class App {
     public static void main(String[] args) throws IOException, BuildSignException {
         LOG.info("<App>");
         try (Connection connection = new Connection()) {
-            findDisplays(connection);
+            List<DisplayInfo> displays = findDisplays(connection);
+            if (!displays.isEmpty()) {
+                DisplayInfo di = displays.get(0);
+                Display display = new Display(connection, di.getI2cAddress());
+                DisplayValues values = new DisplayValues();
+                values.setScrollDelay(100);
+                values.setRandomPointCount(1);
+                values.setRandomPointRandomB(255);
+                values.setPercentOfPrevious(1);
+
+                display.send(new DisplaySend(values));
+            }
 
 /*
             Device d = new Device(connection, 0x12);
-            d.send(new DummySend("Moin!!"));
+            d.send(new DisplaySend("Moin!!"));
             DisplayInfoReceive receive = d.receive(DisplayInfoReceive.class);
 
             //LOG.info("received(bytes): '{}'", receive.getSize());

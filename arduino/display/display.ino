@@ -7,6 +7,19 @@
 #define MATRIX_ROWS 8
 
 typedef struct {
+  uint8_t b;
+  uint8_t g;
+  uint8_t r;
+  uint8_t w;
+} rgbwpixel_t;
+
+union Pixel {
+  uint32_t value;
+  uint8_t color[4];
+  rgbwpixel_t rgbw;
+};
+
+typedef struct {
   uint8_t scroll_delay;
   uint8_t scroll_direction;
   uint8_t percent_of_previous;
@@ -39,9 +52,32 @@ Adafruit_NeoPixel pixels = Adafruit_NeoPixel(64, LED_PIN, NEO_KHZ800 + NEO_GRB);
 String id;
 
 void setColorMatrix() {
-  msg.scroll_delay = 75;
+  /*
+    msg.scroll_delay = 75;
+    msg.scroll_direction = 0;
+    msg.percent_of_previous = 40;
+    msg.offset_r = 0;
+    msg.offset_g = 0;
+    msg.offset_b = 0;
+    msg.offset_w = 0;
+    msg.random_r = 0;
+    msg.random_g = 0;
+    msg.random_b = 0;
+    msg.random_w = 0;
+    msg.random_point_count  = 1;
+    msg.random_point_offset_r = 0;
+    msg.random_point_offset_g = 0;
+    msg.random_point_offset_b = 0;
+    msg.random_point_offset_w = 0;
+    msg.random_point_random_r = 255;
+    msg.random_point_random_g = 255;
+    msg.random_point_random_b = 255;
+    msg.random_point_random_w = 0;
+  */
+
+  msg.scroll_delay = 255;
   msg.scroll_direction = 0;
-  msg.percent_of_previous = 40;
+  msg.percent_of_previous = 25;
   msg.offset_r = 0;
   msg.offset_g = 0;
   msg.offset_b = 0;
@@ -57,18 +93,19 @@ void setColorMatrix() {
   msg.random_point_offset_w = 0;
   msg.random_point_random_r = 255;
   msg.random_point_random_g = 255;
-  msg.random_point_random_b = 255;
+  msg.random_point_random_b = 100;
   msg.random_point_random_w = 0;
+
 }
 //------------------------------------------------------------------------------
-void requestEvent() 
+void requestEvent()
 //------------------------------------------------------------------------------
 {
   Wire.write(id.c_str());
 }
 
 //------------------------------------------------------------------------------
-void receiveEvent(int howMany) 
+void receiveEvent(int howMany)
 //------------------------------------------------------------------------------
 {
   if (howMany == sizeof(msg_t)) {
@@ -82,18 +119,13 @@ void receiveEvent(int howMany)
 }
 
 //------------------------------------------------------------------------------
-void tryCopyBuffer() 
+void tryCopyBuffer()
 //------------------------------------------------------------------------------
 {
   // TODO disable interrupts
   if (newDataAvailable) {
-    uint8_t *from = (uint8_t*)&newMsg;
-    uint8_t *to = (uint8_t*)&msg;
-    for (uint8_t i = 0; i < sizeof(msg_t); ++i) {
-      *from = *to;
-      ++from;
-      ++to;
-    }
+    Serial.println("New Data available");
+    memcpy( &msg, &newMsg, sizeof(msg_t) );
     newDataAvailable = false;
   }
   // TODO enable interrupts
@@ -103,6 +135,7 @@ void tryCopyBuffer()
 void setup()
 //------------------------------------------------------------------------------
 {
+  Serial.begin(115200);
   newDataAvailable = false;
   Wire.begin(I2C_ADDRESS);
   Wire.onReceive(receiveEvent);
@@ -111,6 +144,7 @@ void setup()
   setColorMatrix();
 
   id = String("BuildDisplay: v1.0.0 msg(") + String(sizeof(msg_t)) + String(")");
+  Serial.println(id);
 }
 
 //------------------------------------------------------------------------------
@@ -127,48 +161,58 @@ void loop()
         pixels.getPixelColor((r - 1)*MATRIX_COLUMNS + c) );
     }
   }
-
+  
   // percent of previous
   uint8_t* ptr = pixels.getPixels();
   uint16_t temp;
-  for (uint8_t i = 0; i < MATRIX_COLUMNS * 4; ++i) {
-    temp = *ptr;
-    *ptr++ = temp * msg.percent_of_previous / 100;
+  Pixel pixel;
+  for (uint8_t i = 0; i < MATRIX_COLUMNS; ++i) {
+    pixel.value = pixels.getPixelColor(i);
+    for (uint8_t j = 0; j < 4; ++j) {
+      temp = pixel.color[j];
+      temp = (temp * msg.percent_of_previous) / 100;
+      pixel.color[j] = temp;
+    }
+    pixels.setPixelColor(i, pixel.value);
   }
 
   uint16_t r = 0, g = 0, b = 0, w = 0;
   uint32_t px;
 
+  // set baclground points
   for (uint8_t i = 0; i < MATRIX_COLUMNS; ++i) {
-    uint32_t px = pixels.getPixelColor(i);
+    pixel.value = pixels.getPixelColor(i);
 
-    w = (px & 0xff) + msg.offset_w;
-    if (msg.random_w) w += random(0, msg.random_w + 1);
-    if (w > 255)w = 255;
+    temp = pixel.rgbw.r;
+    temp = temp + msg.offset_r + random(0, msg.random_r + 1);
+    if (temp > 255) temp = 255;
+    pixel.rgbw.r = temp;
 
-    px >>= 8;
-    b = (px & 0xff) + msg.offset_b;
-    if (msg.random_b) b += random(0, msg.random_b + 1);
-    if (b > 255)b = 255;
+    temp = pixel.rgbw.g;
+    temp = temp + msg.offset_g + random(0, msg.random_g + 1);
+    if (temp > 255) temp = 255;
+    pixel.rgbw.g = temp;
 
-    px >>= 8;
-    g = (px & 0xff) + msg.offset_g;
-    if (msg.random_g) g += random(0, msg.random_g + 1);
-    if (g > 255)g = 255;
+    temp = pixel.rgbw.b;
+    temp = temp + msg.offset_b + random(0, msg.random_b + 1);
+    if (temp > 255) temp = 255;
+    pixel.rgbw.b = temp;
 
-    r = (px & 0xff) + msg.offset_r;
-    if (msg.random_r) r += random(0, msg.random_r + 1);
-    if (r > 255)r = 255;
+    temp = pixel.rgbw.w;
+    temp = temp + msg.offset_w + random(0, msg.random_w + 1);
+    if (temp > 255) temp = 255;
+    pixel.rgbw.w = temp;
 
-    pixels.setPixelColor(i, r, g, b, w);
+    pixels.setPixelColor(i, pixel.value);
   }
 
   // set random points
   for (uint8_t i = 0; i < msg.random_point_count; ++i) {
-    r = msg.random_point_random_r ? msg.random_point_offset_r + random(0, msg.random_point_random_r + 1) : msg.random_point_offset_r;
-    g = msg.random_point_random_g ? msg.random_point_offset_g + random(0, msg.random_point_random_g + 1) : msg.random_point_offset_g;
-    b = msg.random_point_random_b ? msg.random_point_offset_b + random(0, msg.random_point_random_b + 1) : msg.random_point_offset_b;
-    w = msg.random_point_random_w ? msg.random_point_offset_w + random(0, msg.random_point_random_w + 1) : msg.random_point_offset_w;
+    r = msg.random_point_offset_r + random(0, msg.random_point_random_r + 1);
+    g = msg.random_point_offset_g + random(0, msg.random_point_random_g + 1);
+    b = msg.random_point_offset_b + random(0, msg.random_point_random_b + 1);
+    w = msg.random_point_offset_w + random(0, msg.random_point_random_w + 1);
+
     pixels.setPixelColor( random(0, MATRIX_COLUMNS), r, g, b, w);
   }
 
