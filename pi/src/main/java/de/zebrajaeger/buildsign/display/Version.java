@@ -1,4 +1,4 @@
-package de.zebrajaeger.buildsign.data;
+package de.zebrajaeger.buildsign.display;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

@@ -1,4 +1,4 @@
-package de.zebrajaeger.buildsign.data;
+package de.zebrajaeger.buildsign.display;
 
 /**
  * typedef struct {<br>

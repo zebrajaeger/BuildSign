@@ -29,7 +29,7 @@ public class Device {
     }
 
     public void send(DataSend dataSend) throws IOException {
-        LOG.info("Send data to display: '{}'", dataSend);
+        LOG.info("Send display to display: '{}'", dataSend);
         getDevice().write(dataSend.getValues());
     }
 
@@ -40,13 +40,13 @@ public class Device {
 
             byte[] buffer = new byte[dataSize];
             int bytesRidden = getDevice().read(buffer, 0, dataSize);
-            LOG.info("Read data from display. Count: '{}'", bytesRidden);
+            LOG.info("Read display from display. Count: '{}'", bytesRidden);
             if (bytesRidden != dataSize) {
                 throw new BuildSignException(String.format(
                         "Got not enough DataSend for class: '%s'. ExpectedSize: '%s' bot got only: '%s'",
                         dataClass, dataSize, bytesRidden));
             }
-            LOG.info("Got enough data. create object.");
+            LOG.info("Got enough display. create object.");
             dataReceive.setValues(buffer);
             return (T) dataReceive;
         } catch (InstantiationException | IllegalAccessException e) {

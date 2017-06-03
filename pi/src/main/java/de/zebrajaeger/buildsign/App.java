@@ -1,9 +1,9 @@
 package de.zebrajaeger.buildsign;
 
-import de.zebrajaeger.buildsign.data.DisplayInfo;
-import de.zebrajaeger.buildsign.data.DisplayInfoReceive;
-import de.zebrajaeger.buildsign.data.DisplaySend;
-import de.zebrajaeger.buildsign.data.DisplayValues;
+import de.zebrajaeger.buildsign.display.DisplayInfo;
+import de.zebrajaeger.buildsign.display.DisplayInfoReceive;
+import de.zebrajaeger.buildsign.display.DisplaySend;
+import de.zebrajaeger.buildsign.display.DisplayValues;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +17,15 @@ import java.util.List;
 public class App {
     private static final Logger LOG = LoggerFactory.getLogger(App.class);
 
+    public static void main(String[] args) {
+        new App().start();
+    }
+
     private App() {
+    }
+
+    private void start(){
+        // TODO implement me
     }
 
     public static List<DisplayInfo> findDisplays(Connection connection) {
@@ -41,7 +49,7 @@ public class App {
         return result;
     }
 
-    public static void main(String[] args) throws IOException, BuildSignException {
+    public static void main2(String[] args) throws IOException, BuildSignException {
         LOG.info("<App>");
         try (Connection connection = new Connection()) {
             List<DisplayInfo> displays = findDisplays(connection);

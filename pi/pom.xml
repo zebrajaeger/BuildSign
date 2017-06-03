@@ -28,6 +28,21 @@
             <version>1.1</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.1</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>22.0</version>
+        </dependency>
+
+        <!-- ########## Logging Stuff ##########-->
         <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -40,7 +55,9 @@
             <artifactId>slf4j-simple</artifactId>
             <version>1.7.25</version>
         </dependency>
+        <!-- /########## Logging Stuff ##########-->
 
+        <!-- ########## Unit testing Stuff ##########-->
         <!-- https://mvnrepository.com/artifact/junit/junit -->
         <dependency>
             <groupId>junit</groupId>
@@ -64,6 +81,7 @@
             <version>2.8.9</version>
             <scope>test</scope>
         </dependency>
+        <!-- /########## Unit testing Stuff ##########-->
 
     </dependencies>
 
@@ -113,6 +131,21 @@
                 </configuration>
             </plugin>
 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
             <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-jar-plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -128,85 +161,96 @@
                 </configuration>
             </plugin>
 
-            <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-assembly-plugin -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.0.0</version>
-                <configuration>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                    <archive>
-                        <manifest>
-                            <mainClass>${mainClass}</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>assemble-all</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-antrun-plugin -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.8</version>
-                <executions>
-                    <execution>
-                        <id>scp-to-remote</id>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <target>
-                                <!-- keyfile+passphrase or  password, choose one -->
-                                <!--
-                                <scp localFile="${project.basedir}/target/qos-spark-1.0.jar"
-                                  remoteToFile="root@192.168.203.156:/usr/sanss" verbose="true"
-                                  keyfile="C:\Users\shengw\.ssh\192.168.203.156\id_rsa"
-                                  passphrase="">
-                                </scp>
-                                 -->
-                                <scp localFile="${project.basedir}/target/${project.artifactId}-${project.version}-jar-with-dependencies.jar"
-                                     remoteToFile="pi@192.168.178.36:~" verbose="true"
-                                     password="raspberry" trust="true">
-                                </scp>
-                                <scp localFile="${project.basedir}/target/${project.artifactId}-${project.version}.jar"
-                                     remoteToFile="pi@192.168.178.36:~" verbose="true"
-                                     password="raspberry" trust="true">
-                                </scp>
-                            </target>
-                        </configuration>
-                    </execution>
-                </executions>
-                <!-- libraries for scp impl      -->
-                <!-- antrun doesn't use os's scp -->
-                <dependencies>
-                    <!-- https://mvnrepository.com/artifact/com.jcraft/jsch -->
-                    <dependency>
-                        <groupId>com.jcraft</groupId>
-                        <artifactId>jsch</artifactId>
-                        <version>0.1.54</version>
-                    </dependency>
-
-                    <!-- https://mvnrepository.com/artifact/org.apache.ant/ant-jsch -->
-                    <dependency>
-                        <groupId>org.apache.ant</groupId>
-                        <artifactId>ant-jsch</artifactId>
-                        <version>1.10.1</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>upload</id>
+            <build>
+                <plugins>
+                    <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-assembly-plugin -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <version>3.0.0</version>
+                        <configuration>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                            <archive>
+                                <manifest>
+                                    <mainClass>${mainClass}</mainClass>
+                                </manifest>
+                            </archive>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>assemble-all</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-antrun-plugin -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.8</version>
+                        <executions>
+                            <execution>
+                                <id>scp-to-remote</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <!-- keyfile+passphrase or  password, choose one -->
+                                        <!--
+                                        <scp localFile="${project.basedir}/target/qos-spark-1.0.jar"
+                                          remoteToFile="root@192.168.203.156:/usr/sanss" verbose="true"
+                                          keyfile="C:\Users\shengw\.ssh\192.168.203.156\id_rsa"
+                                          passphrase="">
+                                        </scp>
+                                         -->
+                                        <scp localFile="${project.basedir}/target/${project.artifactId}-${project.version}-jar-with-dependencies.jar"
+                                             remoteToFile="pi@192.168.178.36:~" verbose="true"
+                                             password="raspberry" trust="true">
+                                        </scp>
+                                        <scp localFile="${project.basedir}/target/${project.artifactId}-${project.version}.jar"
+                                             remoteToFile="pi@192.168.178.36:~" verbose="true"
+                                             password="raspberry" trust="true">
+                                        </scp>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <!-- libraries for scp impl      -->
+                        <!-- antrun doesn't use os's scp -->
+                        <dependencies>
+                            <!-- https://mvnrepository.com/artifact/com.jcraft/jsch -->
+                            <dependency>
+                                <groupId>com.jcraft</groupId>
+                                <artifactId>jsch</artifactId>
+                                <version>0.1.54</version>
+                            </dependency>
+
+                            <!-- https://mvnrepository.com/artifact/org.apache.ant/ant-jsch -->
+                            <dependency>
+                                <groupId>org.apache.ant</groupId>
+                                <artifactId>ant-jsch</artifactId>
+                                <version>1.10.1</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+    </profiles>
 
 </project>
