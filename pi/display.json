@@ -1,0 +1,8 @@
+{
+  "defaultMultiplyer": { "r": 2.55, "g": 2.55, "b": 1.28 },
+  "displays": [
+    { "displayId": "MyProject1",  "i2caddress": 18 },
+    { "displayId": "MyProject2",  "i2caddress": 19 },
+    { "displayId": "MyProject3",  "i2caddress": 20, "multiplyer": { "r": 2.55, "g": 2.55, "b": 1.1 } }
+  ]
+}

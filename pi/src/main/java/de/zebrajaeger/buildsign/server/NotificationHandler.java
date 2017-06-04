@@ -1,11 +1,12 @@
 package de.zebrajaeger.buildsign.server;
 
+import com.google.common.base.Charsets;
+import com.google.common.eventbus.EventBus;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import de.zebrajaeger.buildsign.Bus;
 import de.zebrajaeger.buildsign.notification.JenkinsNotificationJob;
-import de.zebrajaeger.buildsign.utils.StreamUtils;
+import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -14,11 +15,17 @@ import java.io.OutputStream;
  * @author Lars Brandt
  */
 public class NotificationHandler implements HttpHandler {
+    private EventBus eventBus;
+
+    public NotificationHandler(EventBus eventBus) {
+        this.eventBus = eventBus;
+    }
+
     @Override
     public void handle(HttpExchange he) throws IOException {
-        String body = StreamUtils.stringFromInputStream(he.getRequestBody());
+        String body = IOUtils.toString(he.getRequestBody(), Charsets.UTF_8);
         JenkinsNotificationJob job = new Gson().fromJson(body, JenkinsNotificationJob.class);
-        Bus.post(job);
+        eventBus.post(job);
 
         he.getResponseHeaders().add("Content-Type", "text/html; charset=UTF-8");
         String response = "thx";

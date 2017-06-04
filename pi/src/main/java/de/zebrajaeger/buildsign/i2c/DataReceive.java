@@ -1,4 +1,4 @@
-package de.zebrajaeger.buildsign;
+package de.zebrajaeger.buildsign.i2c;
 
 /**
  * @author Lars Brandt

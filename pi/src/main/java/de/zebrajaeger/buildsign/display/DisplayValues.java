@@ -28,32 +28,153 @@ package de.zebrajaeger.buildsign.display;
  *
  * @author Lars Brandt
  */
+@SuppressWarnings("cyclomaticcomplexity")
 public class DisplayValues {
 
-    private int scrollDelay;
-    private int scrollDirection;
-    private int percentOfPrevious;
+    private static final DisplayValues DEFAULT_VALUES = new DisplayValues(
+            100, 0, 75,
+            0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0);
 
-    private int offsetR;
-    private int offsetG;
-    private int offsetB;
-    private int offsetW;
-    private int randomR;
-    private int randomG;
-    private int randomB;
-    private int randomW;
+    private Integer scrollDelay;
+    private Integer scrollDirection;
+    private Integer percentOfPrevious;
 
-    private int randomPointCount;
-    private int randomPointOffsetR;
-    private int randomPointOffsetG;
-    private int randomPointOffsetB;
-    private int randomPointOffsetW;
-    private int randomPointRandomR;
-    private int randomPointRandomG;
-    private int randomPointRandomB;
-    private int randomPointRandomW;
+    private Integer offsetR;
+    private Integer offsetG;
+    private Integer offsetB;
+    private Integer offsetW;
+    private Integer randomR;
+    private Integer randomG;
+    private Integer randomB;
+    private Integer randomW;
 
-    public int getScrollDelay() {
+    private Integer randomPointCount;
+    private Integer randomPointOffsetR;
+    private Integer randomPointOffsetG;
+    private Integer randomPointOffsetB;
+    private Integer randomPointOffsetW;
+    private Integer randomPointRandomR;
+    private Integer randomPointRandomG;
+    private Integer randomPointRandomB;
+    private Integer randomPointRandomW;
+
+    public DisplayValues() {
+    }
+
+    @SuppressWarnings("parameternumber")
+    public DisplayValues(int scrollDelay,
+                         Integer scrollDirection,
+                         Integer percentOfPrevious,
+                         Integer offsetR,
+                         Integer offsetG,
+                         Integer offsetB,
+                         Integer offsetW,
+                         Integer randomR,
+                         Integer randomG,
+                         Integer randomB,
+                         Integer randomW,
+                         Integer randomPointCount,
+                         Integer randomPointOffsetR,
+                         Integer randomPointOffsetG,
+                         Integer randomPointOffsetB,
+                         Integer randomPointOffsetW,
+                         Integer randomPointRandomR,
+                         Integer randomPointRandomG,
+                         Integer randomPointRandomB,
+                         Integer randomPointRandomW) {
+        this.scrollDelay = scrollDelay;
+        this.scrollDirection = scrollDirection;
+        this.percentOfPrevious = percentOfPrevious;
+        this.offsetR = offsetR;
+        this.offsetG = offsetG;
+        this.offsetB = offsetB;
+        this.offsetW = offsetW;
+        this.randomR = randomR;
+        this.randomG = randomG;
+        this.randomB = randomB;
+        this.randomW = randomW;
+        this.randomPointCount = randomPointCount;
+        this.randomPointOffsetR = randomPointOffsetR;
+        this.randomPointOffsetG = randomPointOffsetG;
+        this.randomPointOffsetB = randomPointOffsetB;
+        this.randomPointOffsetW = randomPointOffsetW;
+        this.randomPointRandomR = randomPointRandomR;
+        this.randomPointRandomG = randomPointRandomG;
+        this.randomPointRandomB = randomPointRandomB;
+        this.randomPointRandomW = randomPointRandomW;
+    }
+
+    public void completeWithValues() {
+        completeWithValues(DEFAULT_VALUES);
+    }
+
+    public void completeWithValues(DisplayValues defaultValues) {
+        if (scrollDelay == null) {
+            scrollDelay = defaultValues.getScrollDelay();
+        }
+        if (scrollDirection == null) {
+            scrollDirection = defaultValues.getScrollDirection();
+        }
+        if (percentOfPrevious == null) {
+            percentOfPrevious = defaultValues.getPercentOfPrevious();
+        }
+
+        if (offsetR == null) {
+            offsetR = defaultValues.getOffsetR();
+        }
+        if (offsetG == null) {
+            offsetG = defaultValues.getOffsetG();
+        }
+        if (offsetB == null) {
+            offsetB = defaultValues.getOffsetB();
+        }
+        if (offsetW == null) {
+            offsetW = defaultValues.getOffsetW();
+        }
+        if (randomR == null) {
+            randomR = defaultValues.getRandomR();
+        }
+        if (randomG == null) {
+            randomG = defaultValues.getRandomG();
+        }
+        if (randomB == null) {
+            randomB = defaultValues.getRandomB();
+        }
+        if (randomW == null) {
+            randomW = defaultValues.getRandomW();
+        }
+
+        if (randomPointCount == null) {
+            randomPointCount = defaultValues.getRandomPointCount();
+        }
+        if (randomPointOffsetR == null) {
+            randomPointOffsetR = defaultValues.getRandomPointOffsetR();
+        }
+        if (randomPointOffsetG == null) {
+            randomPointOffsetG = defaultValues.getRandomPointOffsetG();
+        }
+        if (randomPointOffsetB == null) {
+            randomPointOffsetB = defaultValues.getRandomPointOffsetB();
+        }
+        if (randomPointOffsetR == null) {
+            randomPointOffsetR = defaultValues.getRandomPointOffsetR();
+        }
+        if (randomPointRandomR == null) {
+            randomPointRandomR = defaultValues.getRandomPointRandomR();
+        }
+        if (randomPointRandomG == null) {
+            randomPointRandomG = defaultValues.getRandomPointRandomG();
+        }
+        if (randomPointRandomB == null) {
+            randomPointRandomB = defaultValues.getRandomPointRandomB();
+        }
+        if (randomPointRandomW == null) {
+            randomPointRandomW = defaultValues.getRandomPointRandomW();
+        }
+    }
+
+    public Integer getScrollDelay() {
         return scrollDelay;
     }
 
@@ -61,7 +182,7 @@ public class DisplayValues {
         this.scrollDelay = scrollDelay;
     }
 
-    public int getScrollDirection() {
+    public Integer getScrollDirection() {
         return scrollDirection;
     }
 
@@ -69,7 +190,7 @@ public class DisplayValues {
         this.scrollDirection = scrollDirection;
     }
 
-    public int getPercentOfPrevious() {
+    public Integer getPercentOfPrevious() {
         return percentOfPrevious;
     }
 
@@ -77,7 +198,7 @@ public class DisplayValues {
         this.percentOfPrevious = percentOfPrevious;
     }
 
-    public int getOffsetR() {
+    public Integer getOffsetR() {
         return offsetR;
     }
 
@@ -85,7 +206,7 @@ public class DisplayValues {
         this.offsetR = offsetR;
     }
 
-    public int getOffsetG() {
+    public Integer getOffsetG() {
         return offsetG;
     }
 
@@ -93,7 +214,7 @@ public class DisplayValues {
         this.offsetG = offsetG;
     }
 
-    public int getOffsetB() {
+    public Integer getOffsetB() {
         return offsetB;
     }
 
@@ -101,7 +222,7 @@ public class DisplayValues {
         this.offsetB = offsetB;
     }
 
-    public int getOffsetW() {
+    public Integer getOffsetW() {
         return offsetW;
     }
 
@@ -109,7 +230,7 @@ public class DisplayValues {
         this.offsetW = offsetW;
     }
 
-    public int getRandomR() {
+    public Integer getRandomR() {
         return randomR;
     }
 
@@ -117,7 +238,7 @@ public class DisplayValues {
         this.randomR = randomR;
     }
 
-    public int getRandomG() {
+    public Integer getRandomG() {
         return randomG;
     }
 
@@ -125,7 +246,7 @@ public class DisplayValues {
         this.randomG = randomG;
     }
 
-    public int getRandomB() {
+    public Integer getRandomB() {
         return randomB;
     }
 
@@ -133,7 +254,7 @@ public class DisplayValues {
         this.randomB = randomB;
     }
 
-    public int getRandomW() {
+    public Integer getRandomW() {
         return randomW;
     }
 
@@ -141,7 +262,7 @@ public class DisplayValues {
         this.randomW = randomW;
     }
 
-    public int getRandomPointCount() {
+    public Integer getRandomPointCount() {
         return randomPointCount;
     }
 
@@ -149,7 +270,7 @@ public class DisplayValues {
         this.randomPointCount = randomPointCount;
     }
 
-    public int getRandomPointOffsetR() {
+    public Integer getRandomPointOffsetR() {
         return randomPointOffsetR;
     }
 
@@ -157,7 +278,7 @@ public class DisplayValues {
         this.randomPointOffsetR = randomPointOffsetR;
     }
 
-    public int getRandomPointOffsetG() {
+    public Integer getRandomPointOffsetG() {
         return randomPointOffsetG;
     }
 
@@ -165,7 +286,7 @@ public class DisplayValues {
         this.randomPointOffsetG = randomPointOffsetG;
     }
 
-    public int getRandomPointOffsetB() {
+    public Integer getRandomPointOffsetB() {
         return randomPointOffsetB;
     }
 
@@ -173,7 +294,7 @@ public class DisplayValues {
         this.randomPointOffsetB = randomPointOffsetB;
     }
 
-    public int getRandomPointOffsetW() {
+    public Integer getRandomPointOffsetW() {
         return randomPointOffsetW;
     }
 
@@ -181,7 +302,7 @@ public class DisplayValues {
         this.randomPointOffsetW = randomPointOffsetW;
     }
 
-    public int getRandomPointRandomR() {
+    public Integer getRandomPointRandomR() {
         return randomPointRandomR;
     }
 
@@ -189,7 +310,7 @@ public class DisplayValues {
         this.randomPointRandomR = randomPointRandomR;
     }
 
-    public int getRandomPointRandomG() {
+    public Integer getRandomPointRandomG() {
         return randomPointRandomG;
     }
 
@@ -197,7 +318,7 @@ public class DisplayValues {
         this.randomPointRandomG = randomPointRandomG;
     }
 
-    public int getRandomPointRandomB() {
+    public Integer getRandomPointRandomB() {
         return randomPointRandomB;
     }
 
@@ -205,7 +326,7 @@ public class DisplayValues {
         this.randomPointRandomB = randomPointRandomB;
     }
 
-    public int getRandomPointRandomW() {
+    public Integer getRandomPointRandomW() {
         return randomPointRandomW;
     }
 

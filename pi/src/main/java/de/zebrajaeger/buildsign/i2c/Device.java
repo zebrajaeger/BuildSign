@@ -1,6 +1,7 @@
-package de.zebrajaeger.buildsign;
+package de.zebrajaeger.buildsign.i2c;
 
 import com.pi4j.io.i2c.I2CDevice;
+import de.zebrajaeger.buildsign.BuildSignException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

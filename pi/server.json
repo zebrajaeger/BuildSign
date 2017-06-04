@@ -1,0 +1,4 @@
+{
+  "port": 9999,
+  "admin": { "user": "admin", "password": "admin" }
+}

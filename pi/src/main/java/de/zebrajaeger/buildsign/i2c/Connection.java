@@ -1,4 +1,4 @@
-package de.zebrajaeger.buildsign;
+package de.zebrajaeger.buildsign.i2c;
 
 import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CFactory;

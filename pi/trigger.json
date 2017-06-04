@@ -1,0 +1,35 @@
+{
+  "defaultValues": {
+    "scrollDelay": 100,
+    "scrollDirection": 0,
+    "percentOfPrevious": 75,
+
+    "offsetR": 0, "offsetG": 0, "offsetB": 0, "offsetW": 0,
+    "randomR": 0, "randomG": 0, "randomB": 0, "randomW": 0,
+
+    "randomPointCount": 0,
+    "randomPointOffsetR": 0, "randomPointOffsetG": 0, "randomPointOffsetB": 0, "randomPointOffsetW": 0,
+    "randomPointRandomR": 0, "randomPointRandomG": 0, "randomPointRandomB": 0, "randomPointRandomW": 0
+  },
+  "projects": [
+    {
+      "jenkinsProjectName": "BuildSign_Test_Fail",
+      "defaultDisplayId": "MyProject1",
+      "triggers": [
+        {
+          "phase": "STARTED", "status": "ALL",
+          "values":{ "randomPointCount": 1, "randomPointRandomR": 100, "randomPointRandomG": 100, "randomPointRandomB": 100 }
+        }, {
+          "phase": "FINALIZED", "status": "SUCCESS",
+          "values":{ "offsetG": 100 }
+        }, {
+          "phase": "FINALIZED", "status": "UNSTABLE",
+          "values":{ "offsetR": 100, "offsetG": 100 }
+        }, {
+          "phase": "FINALIZED", "status": "SUCCESS",
+          "values":{ "offsetG": 100 }
+        }
+      ]
+    }
+  ]
+}

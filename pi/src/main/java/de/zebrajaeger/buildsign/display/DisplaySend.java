@@ -1,6 +1,6 @@
 package de.zebrajaeger.buildsign.display;
 
-import de.zebrajaeger.buildsign.DataSend;
+import de.zebrajaeger.buildsign.i2c.DataSend;
 
 /**
  * typedef struct {<br>

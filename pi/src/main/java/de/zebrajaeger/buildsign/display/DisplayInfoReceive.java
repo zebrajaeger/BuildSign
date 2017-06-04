@@ -1,6 +1,6 @@
 package de.zebrajaeger.buildsign.display;
 
-import de.zebrajaeger.buildsign.DataReceive;
+import de.zebrajaeger.buildsign.i2c.DataReceive;
 
 import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
