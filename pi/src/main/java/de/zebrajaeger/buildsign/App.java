@@ -3,9 +3,13 @@ package de.zebrajaeger.buildsign;
 import com.google.common.eventbus.DeadEvent;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
+import de.zebrajaeger.buildsign.changer.DisplayChanger;
+import de.zebrajaeger.buildsign.changer.DisplayChangerDummy;
 import de.zebrajaeger.buildsign.config.Config;
 import de.zebrajaeger.buildsign.config.ConfigException;
+import de.zebrajaeger.buildsign.i2c.Connection;
 import de.zebrajaeger.buildsign.server.NotificationHttpServer;
+import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,32 +24,37 @@ public class App {
 
     public static void main(String[] args) throws IOException {
         try {
-            new App().start();
+            new App().start(RuntimeConfig.of(args));
+        } catch (ParseException e) {
+            LOG.error("Fatal: parsing of command line arguments failed", e);
+            System.exit(-1);
         } catch (Throwable t) {
             LOG.error("Fatal error on startup.", t);
             System.exit(-1);
         }
     }
 
-    private App() {
-    }
-
-    private void start() throws IOException, ConfigException {
+    private void start(RuntimeConfig runtimeConfig) throws IOException, ConfigException {
         LOG.info("Start application.");
         EventBus eventBus = new EventBus("default-bus");
         eventBus.register(this);
         Config config = new Config(new File("."));
         eventBus.post(config);
+
+        if (runtimeConfig.isDryRun()) {
+            new DisplayChangerDummy(config, eventBus);
+        } else {
+            Connection connection = new Connection();
+            new DisplayChanger(config, eventBus, connection);
+        }
         new NotificationHttpServer(config, eventBus);
-        new DisplayChanger(config, eventBus);
     }
 
     @Subscribe
     @SuppressWarnings("unused")
     public void deadEvent(DeadEvent event) {
-        LOG.error("Received dead event: '{}'", event);
+        LOG.warn("Received dead event: '{}'", event);
     }
-
 
 //    public static List<DisplayInfo> findDisplays(Connection connection) {
 //        List<DisplayInfo> result = new LinkedList<>();

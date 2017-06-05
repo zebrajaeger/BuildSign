@@ -34,6 +34,7 @@ public class Device {
         getDevice().write(dataSend.getValues());
     }
 
+    @SuppressWarnings("unchecked")
     public <T extends DataReceive> T receive(Class<T> dataClass) throws IOException, BuildSignException {
         try {
             DataReceive dataReceive = dataClass.newInstance();

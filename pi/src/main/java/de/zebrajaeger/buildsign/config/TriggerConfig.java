@@ -8,14 +8,24 @@ import java.util.List;
  * @author Lars Brandt
  */
 public class TriggerConfig {
-    private DisplayValues defaultValues;
+    private DisplayValues values;
     private List<Project> projects;
 
-    public void setDefaultValues(DisplayValues defaultValues) {
-        this.defaultValues = defaultValues;
+    public DisplayValues getValues() {
+        return values;
     }
 
-    public void setProjects(List<Project> projects) {
-        this.projects = projects;
+    public List<Project> getProjects() {
+        return projects;
+    }
+
+    public Project findProjectByName(String name) {
+        for (Project p : projects) {
+            String jenkinsProjectName = p.getJenkinsProjectName();
+            if (jenkinsProjectName != null && jenkinsProjectName.equals(name)) {
+                return p;
+            }
+        }
+        return null;
     }
 }

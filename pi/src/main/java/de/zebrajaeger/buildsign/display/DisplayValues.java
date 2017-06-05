@@ -1,5 +1,7 @@
 package de.zebrajaeger.buildsign.display;
 
+import de.zebrajaeger.buildsign.config.Multiplyer;
+
 /**
  * typedef struct {<br>
  * uint8_t scroll_delay;<br>
@@ -31,7 +33,7 @@ package de.zebrajaeger.buildsign.display;
 @SuppressWarnings("cyclomaticcomplexity")
 public class DisplayValues {
 
-    private static final DisplayValues DEFAULT_VALUES = new DisplayValues(
+    public static final DisplayValues DEFAULT_VALUES = new DisplayValues(
             100, 0, 75,
             0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0);
@@ -105,73 +107,93 @@ public class DisplayValues {
         this.randomPointRandomW = randomPointRandomW;
     }
 
-    public void completeWithValues() {
-        completeWithValues(DEFAULT_VALUES);
+    public DisplayValues fillWithValues(DisplayValues defaultValues) {
+        DisplayValues result = new DisplayValues();
+
+        result.scrollDelay = (scrollDelay != null) ? scrollDelay : defaultValues.scrollDelay;
+        result.scrollDirection = (scrollDirection != null) ? scrollDirection : defaultValues.scrollDirection;
+        result.percentOfPrevious = (percentOfPrevious != null) ? percentOfPrevious : defaultValues.percentOfPrevious;
+
+        result.offsetR = (offsetR != null) ? offsetR : defaultValues.offsetR;
+        result.offsetG = (offsetG != null) ? offsetG : defaultValues.offsetG;
+        result.offsetB = (offsetB != null) ? offsetB : defaultValues.offsetB;
+        result.offsetW = (offsetW != null) ? offsetW : defaultValues.offsetW;
+        result.randomR = (randomR != null) ? randomR : defaultValues.randomR;
+        result.randomG = (randomG != null) ? randomG : defaultValues.randomG;
+        result.randomB = (randomB != null) ? randomB : defaultValues.randomB;
+        result.randomW = (randomW != null) ? randomW : defaultValues.randomW;
+
+        result.randomPointCount = (randomPointCount != null) ? randomPointCount : defaultValues.randomPointCount;
+        result.randomPointOffsetR = (randomPointOffsetR != null) ? randomPointOffsetR : defaultValues.randomPointOffsetR;
+        result.randomPointOffsetG = (randomPointOffsetG != null) ? randomPointOffsetG : defaultValues.randomPointOffsetG;
+        result.randomPointOffsetB = (randomPointOffsetB != null) ? randomPointOffsetB : defaultValues.randomPointOffsetB;
+        result.randomPointOffsetW = (randomPointOffsetW != null) ? randomPointOffsetW : defaultValues.randomPointOffsetW;
+        result.randomPointRandomR = (randomPointRandomR != null) ? randomPointRandomR : defaultValues.randomPointRandomR;
+        result.randomPointRandomG = (randomPointRandomG != null) ? randomPointRandomG : defaultValues.randomPointRandomG;
+        result.randomPointRandomB = (randomPointRandomB != null) ? randomPointRandomB : defaultValues.randomPointRandomB;
+        result.randomPointRandomW = (randomPointRandomW != null) ? randomPointRandomW : defaultValues.randomPointRandomW;
+
+        return result;
     }
 
-    public void completeWithValues(DisplayValues defaultValues) {
-        if (scrollDelay == null) {
-            scrollDelay = defaultValues.getScrollDelay();
-        }
-        if (scrollDirection == null) {
-            scrollDirection = defaultValues.getScrollDirection();
-        }
-        if (percentOfPrevious == null) {
-            percentOfPrevious = defaultValues.getPercentOfPrevious();
-        }
+    public DisplayValues overwriteWithValues(DisplayValues toOverwriteWith) {
+        DisplayValues result = new DisplayValues();
 
-        if (offsetR == null) {
-            offsetR = defaultValues.getOffsetR();
-        }
-        if (offsetG == null) {
-            offsetG = defaultValues.getOffsetG();
-        }
-        if (offsetB == null) {
-            offsetB = defaultValues.getOffsetB();
-        }
-        if (offsetW == null) {
-            offsetW = defaultValues.getOffsetW();
-        }
-        if (randomR == null) {
-            randomR = defaultValues.getRandomR();
-        }
-        if (randomG == null) {
-            randomG = defaultValues.getRandomG();
-        }
-        if (randomB == null) {
-            randomB = defaultValues.getRandomB();
-        }
-        if (randomW == null) {
-            randomW = defaultValues.getRandomW();
-        }
+        result.scrollDelay = (toOverwriteWith.scrollDelay != null) ? toOverwriteWith.scrollDelay : scrollDelay;
+        result.scrollDirection = (toOverwriteWith.scrollDirection != null) ? toOverwriteWith.scrollDirection : scrollDirection;
+        result.percentOfPrevious = (toOverwriteWith.percentOfPrevious != null) ? toOverwriteWith.percentOfPrevious : percentOfPrevious;
 
-        if (randomPointCount == null) {
-            randomPointCount = defaultValues.getRandomPointCount();
-        }
-        if (randomPointOffsetR == null) {
-            randomPointOffsetR = defaultValues.getRandomPointOffsetR();
-        }
-        if (randomPointOffsetG == null) {
-            randomPointOffsetG = defaultValues.getRandomPointOffsetG();
-        }
-        if (randomPointOffsetB == null) {
-            randomPointOffsetB = defaultValues.getRandomPointOffsetB();
-        }
-        if (randomPointOffsetR == null) {
-            randomPointOffsetR = defaultValues.getRandomPointOffsetR();
-        }
-        if (randomPointRandomR == null) {
-            randomPointRandomR = defaultValues.getRandomPointRandomR();
-        }
-        if (randomPointRandomG == null) {
-            randomPointRandomG = defaultValues.getRandomPointRandomG();
-        }
-        if (randomPointRandomB == null) {
-            randomPointRandomB = defaultValues.getRandomPointRandomB();
-        }
-        if (randomPointRandomW == null) {
-            randomPointRandomW = defaultValues.getRandomPointRandomW();
-        }
+        result.offsetR = (toOverwriteWith.offsetR != null) ? toOverwriteWith.offsetR : offsetR;
+        result.offsetG = (toOverwriteWith.offsetG != null) ? toOverwriteWith.offsetG : offsetG;
+        result.offsetB = (toOverwriteWith.offsetB != null) ? toOverwriteWith.offsetB : offsetB;
+        result.offsetW = (toOverwriteWith.offsetW != null) ? toOverwriteWith.offsetW : offsetW;
+        result.randomR = (toOverwriteWith.randomR != null) ? toOverwriteWith.randomR : randomR;
+        result.randomG = (toOverwriteWith.randomG != null) ? toOverwriteWith.randomG : randomG;
+        result.randomB = (toOverwriteWith.randomB != null) ? toOverwriteWith.randomB : randomB;
+        result.randomW = (toOverwriteWith.randomW != null) ? toOverwriteWith.randomW : randomW;
+
+        result.randomPointCount = (toOverwriteWith.randomPointCount != null) ? toOverwriteWith.randomPointCount : randomPointCount;
+        result.randomPointOffsetR = (toOverwriteWith.randomPointOffsetR != null) ? toOverwriteWith.randomPointOffsetR : randomPointOffsetR;
+        result.randomPointOffsetG = (toOverwriteWith.randomPointOffsetG != null) ? toOverwriteWith.randomPointOffsetG : randomPointOffsetG;
+        result.randomPointOffsetB = (toOverwriteWith.randomPointOffsetB != null) ? toOverwriteWith.randomPointOffsetB : randomPointOffsetB;
+        result.randomPointOffsetW = (toOverwriteWith.randomPointOffsetW != null) ? toOverwriteWith.randomPointOffsetW : randomPointOffsetW;
+        result.randomPointRandomR = (toOverwriteWith.randomPointRandomR != null) ? toOverwriteWith.randomPointRandomR : randomPointRandomR;
+        result.randomPointRandomG = (toOverwriteWith.randomPointRandomG != null) ? toOverwriteWith.randomPointRandomG : randomPointRandomG;
+        result.randomPointRandomB = (toOverwriteWith.randomPointRandomB != null) ? toOverwriteWith.randomPointRandomB : randomPointRandomB;
+        result.randomPointRandomW = (toOverwriteWith.randomPointRandomW != null) ? toOverwriteWith.randomPointRandomW : randomPointRandomW;
+
+        return result;
+    }
+
+    public DisplayValues multiply(Multiplyer multiplyer) {
+        DisplayValues result = new DisplayValues();
+        result.scrollDelay = scrollDelay;
+        result.scrollDirection = scrollDirection;
+        result.percentOfPrevious = percentOfPrevious;
+
+        result.offsetR = multiplyer.multiplyR(offsetR);
+        result.offsetG = multiplyer.multiplyG(offsetG);
+        result.offsetB = multiplyer.multiplyB(offsetB);
+        result.offsetW = multiplyer.multiplyW(offsetW);
+        result.randomR = multiplyer.multiplyR(randomR);
+        result.randomG = multiplyer.multiplyG(randomG);
+        result.randomB = multiplyer.multiplyB(randomB);
+        result.randomW = multiplyer.multiplyW(randomW);
+
+        result.randomPointCount = randomPointCount;
+
+
+        result.randomPointOffsetR = multiplyer.multiplyR(randomPointOffsetR);
+        result.randomPointOffsetG = multiplyer.multiplyG(randomPointOffsetG);
+        result.randomPointOffsetB = multiplyer.multiplyB(randomPointOffsetB);
+        result.randomPointOffsetW = multiplyer.multiplyW(randomPointOffsetW);
+
+        result.randomPointRandomR = multiplyer.multiplyW(randomPointRandomR);
+        result.randomPointRandomG = multiplyer.multiplyW(randomPointRandomG);
+        result.randomPointRandomB = multiplyer.multiplyW(randomPointRandomB);
+        result.randomPointRandomW = multiplyer.multiplyW(randomPointRandomW);
+
+        return result;
     }
 
     public Integer getScrollDelay() {
@@ -332,5 +354,31 @@ public class DisplayValues {
 
     public void setRandomPointRandomW(int randomPointRandomW) {
         this.randomPointRandomW = randomPointRandomW;
+    }
+
+    @Override
+    public String toString() {
+        return "DisplayValues{"
+                + "scrollDelay=" + scrollDelay
+                + ", scrollDirection=" + scrollDirection
+                + ", percentOfPrevious=" + percentOfPrevious
+                + ", offsetR=" + offsetR
+                + ", offsetG=" + offsetG
+                + ", offsetB=" + offsetB
+                + ", offsetW=" + offsetW
+                + ", randomR=" + randomR
+                + ", randomG=" + randomG
+                + ", randomB=" + randomB
+                + ", randomW=" + randomW
+                + ", randomPointCount=" + randomPointCount
+                + ", randomPointOffsetR=" + randomPointOffsetR
+                + ", randomPointOffsetG=" + randomPointOffsetG
+                + ", randomPointOffsetB=" + randomPointOffsetB
+                + ", randomPointOffsetW=" + randomPointOffsetW
+                + ", randomPointRandomR=" + randomPointRandomR
+                + ", randomPointRandomG=" + randomPointRandomG
+                + ", randomPointRandomB=" + randomPointRandomB
+                + ", randomPointRandomW=" + randomPointRandomW
+                + '}';
     }
 }

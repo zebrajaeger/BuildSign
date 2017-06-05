@@ -5,19 +5,21 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import de.zebrajaeger.buildsign.notification.JenkinsNotificationJob;
-import de.zebrajaeger.buildsign.utils.StreamUtils;
+import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author Lars Brandt
  */
 public class DebugServer {
     public static final int PORT = 9999;
+
+    private DebugServer() {
+    }
 
     public static void main(String[] args) throws IOException {
         HttpServer server = HttpServer.create(new InetSocketAddress(PORT), 10);
@@ -29,7 +31,7 @@ public class DebugServer {
         @Override
         public void handle(HttpExchange he) throws IOException {
             System.out.println("------------------------------");
-            String body = StreamUtils.stringFromInputStream(he.getRequestBody());
+            String body = IOUtils.toString(he.getRequestBody(), StandardCharsets.UTF_8);
             JenkinsNotificationJob job = new Gson().fromJson(body, JenkinsNotificationJob.class);
             System.out.println(body);
             System.out.println(job);

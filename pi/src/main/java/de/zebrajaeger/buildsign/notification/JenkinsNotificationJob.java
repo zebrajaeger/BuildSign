@@ -31,5 +31,4 @@ public class JenkinsNotificationJob {
     public void setBuild(JenkinsNotificationJobBuild build) {
         this.build = build;
     }
-
 }

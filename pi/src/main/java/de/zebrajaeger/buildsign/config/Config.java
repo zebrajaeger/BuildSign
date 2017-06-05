@@ -1,12 +1,12 @@
 package de.zebrajaeger.buildsign.config;
 
-import com.google.common.base.Charsets;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author Lars Brandt
@@ -29,7 +29,7 @@ public class Config {
         if (!serverFile.exists()) {
             throw new ConfigException(String.format("Could not find server-config: '%s'", serverFile.getAbsolutePath()));
         }
-        String displayServerString = FileUtils.readFileToString(serverFile, Charsets.UTF_8);
+        String displayServerString = FileUtils.readFileToString(serverFile, StandardCharsets.UTF_8);
         try {
             serverConfig = gson.fromJson(displayServerString, ServerConfig.class);
         } catch (JsonSyntaxException e) {
@@ -41,7 +41,7 @@ public class Config {
         if (!displayFile.exists()) {
             throw new ConfigException(String.format("Could not find display-config: '%s'", displayFile.getAbsolutePath()));
         }
-        String displayJsonString = FileUtils.readFileToString(displayFile, Charsets.UTF_8);
+        String displayJsonString = FileUtils.readFileToString(displayFile, StandardCharsets.UTF_8);
         try {
             displayConfig = gson.fromJson(displayJsonString, DisplayConfig.class);
         } catch (JsonSyntaxException e) {
@@ -53,7 +53,7 @@ public class Config {
         if (!triggerFile.exists()) {
             throw new ConfigException(String.format("Could not find trigger-config: '%s'", triggerFile.getAbsolutePath()));
         }
-        String displayProjectString = FileUtils.readFileToString(triggerFile, Charsets.UTF_8);
+        String displayProjectString = FileUtils.readFileToString(triggerFile, StandardCharsets.UTF_8);
         try {
             triggerConfig = gson.fromJson(displayProjectString, TriggerConfig.class);
         } catch (JsonSyntaxException e) {
@@ -67,5 +67,9 @@ public class Config {
 
     public TriggerConfig getTriggerConfig() {
         return triggerConfig;
+    }
+
+    public DisplayConfig getDisplayConfig() {
+        return displayConfig;
     }
 }

@@ -1,5 +1,5 @@
 {
-  "defaultValues": {
+  "values": {
     "scrollDelay": 100,
     "scrollDirection": 0,
     "percentOfPrevious": 75,
@@ -14,12 +14,13 @@
   "projects": [
     {
       "jenkinsProjectName": "BuildSign_Test_Fail",
-      "defaultDisplayId": "MyProject1",
+      "displayId": "MyProject1",
       "triggers": [
         {
           "phase": "STARTED", "status": "ALL",
           "values":{ "randomPointCount": 1, "randomPointRandomR": 100, "randomPointRandomG": 100, "randomPointRandomB": 100 }
         }, {
+          "displayId": "MyProject2",
           "phase": "FINALIZED", "status": "SUCCESS",
           "values":{ "offsetG": 100 }
         }, {
