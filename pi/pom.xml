@@ -101,7 +101,6 @@
 
     <build>
         <plugins>
-
             <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-checkstyle-plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -145,6 +144,7 @@
                 </configuration>
             </plugin>
 
+            <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-source-plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -183,6 +183,28 @@
             <id>upload</id>
             <build>
                 <plugins>
+
+                    <!-- https://mvnrepository.com/artifact/org.codehaus.mojo/properties-maven-plugin -->
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>properties-maven-plugin</artifactId>
+                        <version>1.0.0</version>
+                        <executions>
+                            <execution>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>read-project-properties</goal>
+                                </goals>
+                                <configuration>
+                                    <files>
+                                        <file>${basedir}/src/config/default.properties</file>
+                                        <file>${basedir}/src/config/local.properties</file>
+                                    </files>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
                     <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-assembly-plugin -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -223,21 +245,19 @@
                                 </goals>
                                 <configuration>
                                     <target>
-                                        <!-- keyfile+passphrase or  password, choose one -->
-                                        <!--
-                                        <scp localFile="${project.basedir}/target/qos-spark-1.0.jar"
-                                          remoteToFile="root@192.168.203.156:/usr/sanss" verbose="true"
-                                          keyfile="C:\Users\shengw\.ssh\192.168.203.156\id_rsa"
-                                          passphrase="">
-                                        </scp>
-                                         -->
                                         <scp localFile="${project.basedir}/target/${project.artifactId}-${project.version}-jar-with-dependencies.jar"
-                                             remoteToFile="pi@192.168.178.36:~" verbose="true"
-                                             password="raspberry" trust="true">
+                                                remoteToFile="${remote.user}@${remote.host}:${remote.path}"
+                                                verbose="true"
+                                                trust="true"
+                                                keyfile="${keyfile}"
+                                                passphrase="${keyfile.password}">
                                         </scp>
-                                        <scp localFile="${project.basedir}/target/${project.artifactId}-${project.version}.jar"
-                                             remoteToFile="pi@192.168.178.36:~" verbose="true"
-                                             password="raspberry" trust="true">
+                                        <scp localFile="${project.basedir}/target/${project.artifactId}-${project.version}-jar-with-dependencies.jar"
+                                                remoteToFile="${remote.user}@${remote.host}:${remote.path}"
+                                                verbose="true"
+                                                trust="true"
+                                                keyfile="${keyfile}"
+                                                passphrase="${keyfile.password}">
                                         </scp>
                                     </target>
                                 </configuration>
