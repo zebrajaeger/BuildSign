@@ -1,8 +1,19 @@
 #include <Adafruit_NeoPixel.h>
 #include <Wire.h>
 
-#define I2C_ADDRESS 0x12
-#define LED_PIN 6
+// pin for neopixel matrix
+#define LED_PIN 17
+
+// pins to set i2c address
+#define I2C_ADR_PIN_0 2
+#define I2C_ADR_PIN_1 3
+#define I2C_ADR_PIN_2 4
+#define I2C_ADR_PIN_3 5
+#define I2C_ADR_PIN_4 6
+#define I2C_ADR_PIN_5 7
+#define I2C_ADR_PIN_6 8
+
+// neopixel struct
 #define MATRIX_COLUMNS 8
 #define MATRIX_ROWS 8
 
@@ -137,14 +148,46 @@ void setup()
 {
   Serial.begin(115200);
   newDataAvailable = false;
-  Wire.begin(I2C_ADDRESS);
+
+  // set all i2c-adr-pins to input
+  pinMode(I2C_ADR_PIN_0, INPUT);
+  pinMode(I2C_ADR_PIN_1, INPUT);
+  pinMode(I2C_ADR_PIN_2, INPUT);
+  pinMode(I2C_ADR_PIN_3, INPUT);
+  pinMode(I2C_ADR_PIN_4, INPUT);
+  pinMode(I2C_ADR_PIN_5, INPUT);
+  pinMode(I2C_ADR_PIN_6, INPUT);
+
+  // switch pll-ups on
+  digitalWrite(I2C_ADR_PIN_0, HIGH);
+  digitalWrite(I2C_ADR_PIN_1, HIGH);
+  digitalWrite(I2C_ADR_PIN_2, HIGH);
+  digitalWrite(I2C_ADR_PIN_3, HIGH);
+  digitalWrite(I2C_ADR_PIN_4, HIGH);
+  digitalWrite(I2C_ADR_PIN_5, HIGH);
+  digitalWrite(I2C_ADR_PIN_6, HIGH);
+
+  delay(100);
+
+  // read i2c-adr
+ uint8_t i2cadr = 0;
+ i2cadr |= digitalRead(I2C_ADR_PIN_0); 
+ i2cadr |= digitalRead(I2C_ADR_PIN_1) << 1;
+ i2cadr |= digitalRead(I2C_ADR_PIN_2) << 2;
+ i2cadr |= digitalRead(I2C_ADR_PIN_3) << 3;
+ i2cadr |= digitalRead(I2C_ADR_PIN_4) << 4;
+ i2cadr |= digitalRead(I2C_ADR_PIN_5) << 5;
+ i2cadr |= digitalRead(I2C_ADR_PIN_6) << 6;
+  
+  Wire.begin(i2cadr);
   Wire.onReceive(receiveEvent);
   Wire.onRequest(requestEvent);
   pixels.begin();
   setColorMatrix();
 
-  id = String("BuildDisplay: v1.0.0 msg(") + String(sizeof(msg_t)) + String(")");
+  id = String("BuildDisplay: v1.0.0 msg(") + String(sizeof(msg_t)) + String(")");  
   Serial.println(id);
+  Serial.println("I2C-Address is " + String(i2cadr));
 }
 
 //------------------------------------------------------------------------------
